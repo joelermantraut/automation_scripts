@@ -6,28 +6,20 @@ Module created to simplify the use of mouse.
 
 Maybe it could have problems with X display.
 
+TODO:
 
-TODO: 
-
- - Programar la combinacion con AltGr y 
-   la tecla Shift que sea un modificador
-   pero que no se incluya en la cadena
-   de la tecla.
-
- - Tambien programar la funcion con CapsLock
-   porque no se modifican las teclas presionadas
-   como pasa con shift.
-
- - Tomar en cuenta que AltGr no funciona como
-   deberia.
- - Revisar otras combinaciones.
+    - Add the keyboard control functions.
+    - Maybe it would be useful to use a
+      similar syntaxis than in auto_gui.
 
 """
 
 from pynput import keyboard 
+import re
+import subprocess
 
 class KeyboardControl(object):
-    """Class that simplify use of mouse in automation."""
+    """Class that simplify use of keyboard in automation."""
 
     def __init__(self, alt_gr_map=None):
         super(KeyboardControl, self).__init__()
@@ -107,26 +99,27 @@ class KeyboardControl(object):
             work for me, but no for other.
             """
             self.alt_gr_map = {
-                '!': '|',
-                '"': '@',
-                '#': '·',
-                '$': '~',
-                '%': '½',
-                '&': '¬',
-                '/': '{',
-                '(': '[',
-                ')': ']',
-                '=': '}',
-                "'": '\\',
-                '?': '¸',
+                '1': '|',
+                '2': '@',
+                '3': '·',
+                '4': '~',
+                '5': '½',
+                '6': '¬',
+                '7': '{',
+                '8': '[',
+                '9': ']',
+                '0': '}',
+                '"': '\\',
+                '¿': '¸',
                 '~': '`',
-                '}': '¨',
+                '[': '¨',
                 '+': '~',
                 '{': '^',
                 'q': '@',
                 '-': '^',
-                '.': '·',
-                '<': '|'
+                '<': '|',
+                'z': '«',
+                'x': '»'
             }
         
         self.block_key = "ctrl+/esc"
@@ -134,17 +127,66 @@ class KeyboardControl(object):
         self.on_release_f = None
         self.last_modifiers = []
         self.alt_gr_keycode = "<65027>"
+        self.on_caps_lock = False
+        self.init()
+
+    def init(self):
+        """
+        Runs some init functions.
+
+         - Disables CapsLock.
+         - Inits the keyboard controller.
+
+        """
+        if self.check_lock_keys_state(0):
+            self.controller().tap(keyboard.Key.caps_lock)
+
+        self.keyboard = keyboard.Controller()
+
+    def get_key_str(self, key):
+        key = key.__str__().split('.')[-1]
+        key = re.search(r"[^'.+]+", key).group(0)
     
+        return key
+
+    def check_lock_keys_state(self, lock_key):
+        """
+        Function that checks the state of
+        Caps Lock, Scroll Lock, Nums Lock.
+
+        The parameter lock_key works like:
+
+            0: Caps Lock
+            1: Nums Lock
+            2: Scroll Lock
+
+        IMPORTANT: This will only work in Linux systems.
+        """
+        output = subprocess.Popen(
+                "xset -q | grep Caps",
+                shell=True,
+                stdout=subprocess.PIPE
+        ).stdout.read().decode()
+
+        lock_states = re.findall(r"on|off", output)
+        # Returns on or off for each lock in order
+
+        return True if lock_states[lock_key] == 'on' else False
+
     def prepare_keys(self, key):
         """
         Formats the string that represents the key.
         """
 
         if key in self.specials:
-            key = '/' + key.__str__().split('.')[-1]
+            key = '/' + self.get_key_str(key)
             # Escapes the special chars
+
+            if key == '/caps_lock':
+                self.on_caps_lock = not(self.on_caps_lock)
+            # Have a register of the caps lock
         else:
-            key = key.__str__()
+            key = self.get_key_str(key)
 
             """
             Declared behaviour: Keyboard layout sublevels will
@@ -154,15 +196,18 @@ class KeyboardControl(object):
             """
 
             if "alt_gr" in self.last_modifiers:
-                if key in self.alt_gr_map.keys():
+                if key in self.alt_gr_map:
                     key = self.alt_gr_map[key]
+            elif "shift" in self.last_modifiers:
+                if key.isalpha():
+                    key == key.upper()
+            elif self.on_caps_lock and key.isalpha():
+                key = key.upper()
 
             for modifier in self.last_modifiers:
-                if modifier == 'alt_gr': continue
+                if modifier in ['alt_gr', 'shift']: continue
                 key = modifier.__str__() + '+' + key
                 
-        print(self.last_modifiers)
-
         return key
 
     def on_press(self, key):
@@ -176,18 +221,21 @@ class KeyboardControl(object):
         """
 
         if key in self.modifiers:
-            key = key.__str__().split('.')[-1]
+            key = self.get_key_str(key)
             # Expressed by default like Key.modifier
 
             if key not in self.last_modifiers:
                 self.last_modifiers.append(key)
-        elif key.__str__() == self.alt_gr_keycode:
+        elif self.get_key_str(key) == self.alt_gr_keycode:
             self.last_modifiers.append("alt_gr")
         else:
             key = self.prepare_keys(key)
 
             if self.block and key == self.block_key:
                 return False
+
+        if self.on_press_f != None:
+            self.on_press_f()
 
     def on_release(self, key):
         """
@@ -197,14 +245,17 @@ class KeyboardControl(object):
         """
 
         if key in self.modifiers:
-            key = key.__str__().split('.')[-1]
+            key = self.get_key_str(key)
 
             if key in self.last_modifiers:
                 self.last_modifiers.remove(key)
-        elif key.__str__() == self.alt_gr_keycode:
+        elif self.get_key_str(key) == self.alt_gr_keycode:
             self.last_modifiers.remove("alt_gr")
         else:
             key = self.prepare_keys(key)
+
+        if self.on_release_f != None:
+            self.on_release_f()
 
     def start_listening(
             self,
@@ -233,6 +284,13 @@ class KeyboardControl(object):
                 on_release=self.on_release
             )
             listener.start()
+
+    # --------------------------------------------------
+    # ----------------- KEYBOARD CONTROL ---------------
+    # --------------------------------------------------
+
+    def send_keys(self, keys_list=None):
+        pass
 
 def main():
     keyboard_controller = KeyboardControl()
