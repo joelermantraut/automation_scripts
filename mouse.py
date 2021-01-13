@@ -9,8 +9,14 @@ Maybe it could have problems with X.
 
 TODO: 
 
- - Programar la preparacion de cadenas
-   que representan las teclas apretadas.
+ - Programar las combinacion con AltGr y 
+   la tecla Shift que sea un modificador
+   pero que no se incluya en la cadena
+   de la tecla.
+
+ - Tambien programa las funcion con CapsLock
+   porque no se modifican las teclas presionadas
+   como pasa con shift.
 
  - Tomar en cuenta que AltGr no funciona como
    deberia.
@@ -23,10 +29,10 @@ from pynput import keyboard
 class KeyboardControl(object):
     """Class that simplify use of mouse in automation."""
 
-    def __init__(self):
+    def __init__(self, alt_gr_map=None):
         super(KeyboardControl, self).__init__()
         self.block = False
-        self.keyboard_modifiers = [
+        self.modifiers = [
             keyboard.Key.alt,
             keyboard.Key.alt_gr,
             keyboard.Key.alt_l,
@@ -42,7 +48,7 @@ class KeyboardControl(object):
             keyboard.Key.shift_r,
         ]
 
-        self.keyboard_special = [
+        self.specials = [
             keyboard.Key.enter,
             keyboard.Key.backspace,
             keyboard.Key.caps_lock,
@@ -91,22 +97,57 @@ class KeyboardControl(object):
             keyboard.Key.space,
             keyboard.Key.tab,
         ]
-        self.block_key = "<ctrl>+<esc>"
+        if alt_gr_map == None:
+            """
+            PROBLEM: And a big one. In too many layouts,
+            for this module, AltGr doesn't work like it,
+            because it has another code. So, the only
+            solution that I found, is to create a mapping.
+            But it depends on the layout. This one would 
+            work for me, but no for other.
+            """
+            self.alt_gr_map = {
+                '!': '|',
+                '"': '@',
+                '#': '·',
+                '$': '~',
+                '%': '½',
+                '&': '¬',
+                '/': '{',
+                '(': '[',
+                ')': ']',
+                '=': '}',
+                "'": '\\',
+                '?': '¸',
+                '~': '`',
+                '}': '¨',
+                '+': '~',
+                '{': '^',
+                'q': '@',
+                '-': '^',
+                '.': '·',
+                '<': '|'
+            }
+        
+        self.block_key = "ctrl+esc"
         self.on_press_f = None
         self.on_release_f = None
-
-    def set_block(self):
-        """
-        Enables the variable that defines which key
-        combination disables the blocking.
-        """
-        self.block = True
-
+        self.last_modifiers = []
+    
     def prepare_keys(self, key):
         """
         Formats the string that represents the key.
         """
-        pass
+
+        if key in self.specials:
+            key = '/' + key.__str__().split('.')[-1]
+            # Escapes the special chars
+        elif key not in self.modifiers:
+            key = key.__str__()
+            for modifier in self.last_modifiers:
+                key = modifier.__str__() + '+' + key
+
+        return key
 
     def on_press(self, key):
         """
@@ -117,10 +158,18 @@ class KeyboardControl(object):
         Also, this includes the blocking cancel
         key combination listening.
         """
-        key = key.__str__()
 
-        #  if self.block and key == self.block_key:
-            #  return False
+        if key in self.modifiers:
+            key = key.__str__().split('.')[-1]
+            # Expressed by default like Key.modifier
+
+            if key not in self.last_modifiers:
+                self.last_modifiers.append(key)
+        else:
+            key = self.prepare_keys(key)
+
+            if self.block and key == self.block_key:
+                return False
 
         print(key)
 
@@ -130,7 +179,16 @@ class KeyboardControl(object):
         the key to be passed to the function given
         as argument.
         """
-        pass
+
+        if key in self.modifiers:
+            key = key.__str__().split('.')[-1]
+
+            if key in self.last_modifiers:
+                self.last_modifiers.remove(key)
+        else:
+            key = self.prepare_keys(key)
+
+        print(key)
 
     def start_listening(
             self,
@@ -142,28 +200,26 @@ class KeyboardControl(object):
         Function that configures the listening using
         arguments to set all properties.
         """
-        
+
         self.on_press_f = on_press_f
         self.on_release_f = on_release_f
 
         if blocking:
             self.block = True
             with keyboard.Listener(
-                on_press=on_press_f,
-                on_release=on_release_f
+                on_press=self.on_press,
+                on_release=self.on_release
             ) as listener:
                 listener.join()
         else:
             listener = keyboard.Listener(
-                on_press=on_press_f,
-                on_release=on_release_f
+                on_press=self.on_press,
+                on_release=self.on_release
             )
             listener.start()
 
 def main():
     keyboard_controller = KeyboardControl()
-
-    keyboard_controller.set_block()
 
     keyboard_controller.start_listening(blocking=True)
 
