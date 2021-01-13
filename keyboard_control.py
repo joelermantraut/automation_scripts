@@ -4,17 +4,17 @@
 
 Module created to simplify the use of mouse.
 
-Maybe it could have problems with X.
+Maybe it could have problems with X display.
 
 
 TODO: 
 
- - Programar las combinacion con AltGr y 
+ - Programar la combinacion con AltGr y 
    la tecla Shift que sea un modificador
    pero que no se incluya en la cadena
    de la tecla.
 
- - Tambien programa las funcion con CapsLock
+ - Tambien programar la funcion con CapsLock
    porque no se modifican las teclas presionadas
    como pasa con shift.
 
@@ -129,10 +129,11 @@ class KeyboardControl(object):
                 '<': '|'
             }
         
-        self.block_key = "ctrl+esc"
+        self.block_key = "ctrl+/esc"
         self.on_press_f = None
         self.on_release_f = None
         self.last_modifiers = []
+        self.alt_gr_keycode = "<65027>"
     
     def prepare_keys(self, key):
         """
@@ -142,10 +143,25 @@ class KeyboardControl(object):
         if key in self.specials:
             key = '/' + key.__str__().split('.')[-1]
             # Escapes the special chars
-        elif key not in self.modifiers:
+        else:
             key = key.__str__()
+
+            """
+            Declared behaviour: Keyboard layout sublevels will
+            be ignored. Always that alt_gr is in modifiers, the
+            respective special character is use. If shift or other
+            modifier is pressed, it will be ignored.
+            """
+
+            if "alt_gr" in self.last_modifiers:
+                if key in self.alt_gr_map.keys():
+                    key = self.alt_gr_map[key]
+
             for modifier in self.last_modifiers:
+                if modifier == 'alt_gr': continue
                 key = modifier.__str__() + '+' + key
+                
+        print(self.last_modifiers)
 
         return key
 
@@ -165,13 +181,13 @@ class KeyboardControl(object):
 
             if key not in self.last_modifiers:
                 self.last_modifiers.append(key)
+        elif key.__str__() == self.alt_gr_keycode:
+            self.last_modifiers.append("alt_gr")
         else:
             key = self.prepare_keys(key)
 
             if self.block and key == self.block_key:
                 return False
-
-        print(key)
 
     def on_release(self, key):
         """
@@ -185,10 +201,10 @@ class KeyboardControl(object):
 
             if key in self.last_modifiers:
                 self.last_modifiers.remove(key)
+        elif key.__str__() == self.alt_gr_keycode:
+            self.last_modifiers.remove("alt_gr")
         else:
             key = self.prepare_keys(key)
-
-        print(key)
 
     def start_listening(
             self,
