@@ -259,8 +259,8 @@ class KeyboardControl(object):
 
     def start_listening(
             self,
-            on_press_f=None,
-            on_release_f=None,
+            on_press=None,
+            on_release=None,
             blocking=False
         ):
         """
@@ -268,8 +268,8 @@ class KeyboardControl(object):
         arguments to set all properties.
         """
 
-        self.on_press_f = on_press_f
-        self.on_release_f = on_release_f
+        self.on_press_f = on_press
+        self.on_release_f = on_release
 
         if blocking:
             self.block = True
