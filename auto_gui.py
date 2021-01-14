@@ -49,7 +49,7 @@ class AutoGUI(object):
                     else:
                         pyautogui.typewrite(key)
 
-        def mouse_move(self, move=None, rel=False, drag=False, function=None, iters=0):
+        def mouse_move(self, move=None, rel=False, drag=False, function=None, iters=1):
             """
             Mueve el mouse segun move.
 
