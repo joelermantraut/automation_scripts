@@ -2,15 +2,12 @@
 
 """
 
-Este archivo va a incluir una clase que 
-facilite el uso de expresiones regulares.
-
-La idea es que no se tenga que diferencia
-entre search, match y findall, y que se
-puedan definir funciones mas simples que
-.group o .groups para obtener los resultados,
-como puede ser la devolucion de listas o
-diccionarios.
+Class to simplify use of regular expressions
+functions. It is not to simplify use of
+regular expressions itself. It is needed
+to know how to use them. But it simplifies
+the use of functions findall, search and
+match.
 
 Tambien se puede evaluar la definicion de
 expresiones regulares mediante funciones
@@ -19,3 +16,35 @@ eficiente, ademas requerira un dominio
 solido del tema.
 
 """
+
+import re
+
+def analyse(string, pattern, all=False):
+    """
+    Analyses the regex and returns the
+    result as a list.
+
+    If time matters, the runs search.
+    If not, runs findall.
+
+    This is because usually findall is slower.
+    """
+
+    if all:
+        # Find all ocurrences
+        result = re.findall(pattern, string)
+    else:
+        result = re.search(pattern, string)
+        
+        if result != None:
+            result = result.groups()
+        else:
+            result = []
+
+    return result
+
+def main():
+    print(analyse("hola que tal", r'\s', all=True))
+
+if __name__ == "__main__":
+    main()
