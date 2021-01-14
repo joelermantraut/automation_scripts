@@ -10,4 +10,20 @@ screeninfo.
 
 """
 
+import os
+import subprocess
+import psutil
+import screeninfo
 
+class OSrun(object):
+    """Simplfies the use of some os functions"""
+    
+    def __init__(self):
+        super(OSrun, self).__init__()
+        self.init()
+
+    def init(self):
+        """
+        Runs some init functions.
+        """
+        pass
