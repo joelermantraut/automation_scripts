@@ -125,4 +125,5 @@ def main():
 
 	file_object.create_file("D:\Documentos\Centro\Personal\Modulos de automatizacion\pruebas")
 
-main()
+if __name__ == "__main__":
+    main()

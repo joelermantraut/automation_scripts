@@ -78,4 +78,5 @@ def main():
 
 	print(pdf_class.get_content(100, r".*"))
 
-main()
+if __name__ == "__main__":
+    main()

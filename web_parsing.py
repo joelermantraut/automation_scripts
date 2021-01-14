@@ -139,4 +139,5 @@ def main():
 
 	print(parser.prettify(element))
 
-main()
+if __name__ == "__main__":
+    main()

@@ -4,10 +4,6 @@
 """
 Clase que facilita el uso de PyAutoGUI para multiples aplicaciones.
 
-Creo que PyAutoGUI incluye funciones para algunas de las
-utilidad que ya desarrolle, pero seguramente esten
-depuradas asi que hay que averiguar para reemplazarlas.
-
 Fuente:
 https://pyautogui.readthedocs.io/en/latest/
 https://pyautogui.readthedocs.io/en/latest/quickstart.html
@@ -23,8 +19,8 @@ class AutoGUI(object):
         def __init__(self):
             super(AutoGUI, self).__init__()
             self.special_keys = [
-                    "alt", "altleft", "altright", "enter", "ctrl", "ctrlleft", "ctrlright", "capslock"
-                    "esc", "escape", "up", "down", "left", "right", "shift", "shiftleft", "shiftright"
+                    "alt", "altleft", "altright", "enter", "ctrl", "ctrlleft", "ctrlright", "capslock",
+                    "esc", "escape", "up", "down", "left", "right", "shift", "shiftleft", "shiftright",
                     "space", "tab"] + ["f" + str(i) for i in range(1, 25)]
             self.init()
 
@@ -47,18 +43,7 @@ class AutoGUI(object):
                     if "+" in key and len(key) > 1:
                         keys = key.split("+") # Divide la cadena para obtener las teclas
 
-                        for key in keys: # Sirve para cualquier cantidad de modificadores
-                            if key in self.special_keys:
-                                pyautogui.keyDown(key)
-                                # Presiona los modificadores
-                            else:
-                                pyautogui.press(key)
-                                # Presiona las teclas comunes
-
-                        for key in keys:
-                            if key in self.special_keys:
-                                pyautogui.keyUp(key)
-                        # Suelta todas los modificadores
+                        pyautogui.hotkey(*keys)
                     elif key in self.special_keys:
                         pyautogui.press(key)
                     else:
@@ -193,7 +178,7 @@ def main():
 
     sleep(2)
 
-    autogui.gui("password", ["hola", "que", "tal", lambda x: print(x)])
+    autogui.send_keys(['esc'])
 
 if __name__ == "__main__":
     main()
