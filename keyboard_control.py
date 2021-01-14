@@ -9,8 +9,8 @@ Maybe it could have problems with X display.
 TODO:
 
     - Add the keyboard control functions.
-    - Maybe it would be useful to use a
-      similar syntaxis than in auto_gui.
+     - Terminar esto, hay algun problema
+       con presionar los modificadores.
 
 """
 
@@ -24,21 +24,21 @@ class KeyboardControl(object):
     def __init__(self, alt_gr_map=None):
         super(KeyboardControl, self).__init__()
         self.block = False
-        self.modifiers = [
-            keyboard.Key.alt,
-            keyboard.Key.alt_gr,
-            keyboard.Key.alt_l,
-            keyboard.Key.alt_r,
-            keyboard.Key.cmd,
-            keyboard.Key.cmd_l,
-            keyboard.Key.cmd_r,
-            keyboard.Key.ctrl,
-            keyboard.Key.ctrl_l,
-            keyboard.Key.ctrl_r,
-            keyboard.Key.shift,
-            keyboard.Key.shift_l,
-            keyboard.Key.shift_r,
-        ]
+        self.modifiers = {
+            'alt': keyboard.Key.alt,
+            'alt': keyboard.Key.alt_gr,
+            'alt': keyboard.Key.alt_l,
+            'alt': keyboard.Key.alt_r,
+            'cmd': keyboard.Key.cmd,
+            'cmd': keyboard.Key.cmd_l,
+            'cmd': keyboard.Key.cmd_r,
+            'ctrl': keyboard.Key.ctrl,
+            'ctrl': keyboard.Key.ctrl_l,
+            'ctrl': keyboard.Key.ctrl_r,
+            'shift': keyboard.Key.shift,
+            'shift': keyboard.Key.shift_l,
+            'shift': keyboard.Key.shift_r
+        }
 
         self.specials = [
             keyboard.Key.enter,
@@ -134,14 +134,14 @@ class KeyboardControl(object):
         """
         Runs some init functions.
 
-         - Disables CapsLock.
          - Inits the keyboard controller.
+         - Disables CapsLock.
 
         """
-        if self.check_lock_keys_state(0):
-            self.controller().tap(keyboard.Key.caps_lock)
+        self.controller = keyboard.Controller()
 
-        self.keyboard = keyboard.Controller()
+        if self.check_lock_keys_state(0):
+            self.controller.tap(keyboard.Key.caps_lock)
 
     def get_key_str(self, key):
         key = key.__str__().split('.')[-1]
@@ -289,12 +289,54 @@ class KeyboardControl(object):
     # ----------------- KEYBOARD CONTROL ---------------
     # --------------------------------------------------
 
+    def get_key_from_str(self, key_str):
+        """
+        This function return a Key object,
+        from keyboard.Key, receiving a string
+        that represents it.
+        """
+
+        keys = list()
+
+        if type(key_str) == list:
+            for key in key_str:
+                if key in self.modifiers:
+                    keys.append(self.modifiers[key]) 
+            return keys
+        else:
+            return self.modifiers[key_str]
+
     def send_keys(self, keys_list=None):
-        pass
+        """
+        Writes the keys received as text.
+
+         - If receives a letter, writes it.
+         - If receives a combination (modifier+key)
+           send it all.
+         - If receives a text, writes it as text.
+        """
+        if keys_list:
+            for key in keys_list:
+                if "+" in key and len(key) > 1:
+                    keys = key.split("+")
+
+                    modifiers = self.get_key_from_str(keys[0:-1]) 
+                    # Supposing all keys are modifiers except
+                    # last one
+
+                    with self.controller.pressed(*modifiers):
+                        self.controller.press(keys[-1])
+
+                elif key in self.specials:
+                    key_code = keyboard.KeyCode.from_char(key)
+                    self.controller.tap(key_code)
+                else:
+                    self.controller.type(key)
 
 def main():
     keyboard_controller = KeyboardControl()
 
-    keyboard_controller.start_listening(blocking=True)
+    keyboard_controller.send_keys(['ctrl+shift+v'])
 
-main()
+if __name__ == "__main__":
+    main()
