@@ -14,16 +14,50 @@ import os
 import subprocess
 import psutil
 import screeninfo
+import platform 
 
-class OSrun(object):
-    """Simplfies the use of some os functions"""
+def get_winfo(screen_num=None):
+    """
+    Get screen info.
+
+    screen_num: Number of screen if it exists.
+    """
+
+    screens = screeninfo.get_monitors()
+
+    if screen_num == None:
+        return screens
     
-    def __init__(self):
-        super(OSrun, self).__init__()
-        self.init()
+    if len(screens) > screen_num:
+        return screens[screen_num]
+    else:
+        return None
 
-    def init(self):
-        """
-        Runs some init functions.
-        """
-        pass
+def get_osinfo():
+    """
+    Returns a tuple containing info
+    about the system running.
+    """
+    return platform.uname() 
+
+def run_cmd(cmd, output=False):
+    """
+    Runs a command.
+
+    If output, returns the output.
+    """
+    output_string = subprocess.Popen(
+            cmd,
+            shell=True,
+            stdout=subprocess.PIPE
+    ).stdout.read().decode()
+
+    if output:
+        return output_string 
+
+def main():
+    print(get_osinfo())
+    print(get_winfo())
+
+if __name__ == "__main__":
+    main()
