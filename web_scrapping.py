@@ -19,9 +19,9 @@ from time import sleep
 
 class WebScrapper(object):
     """Clase dedicada a scrappear un sitio WEB mediante Chromedriver"""
-    def __init__(self, url):
+    def __init__(self, PATH, url):
         super(WebScrapper, self).__init__()
-        self.PATH = "C:\Program Files (x86)\chromedriver.exe"
+        self.PATH = PATH
         # Direccion donde esta guardado ChromeDriver
         self.url = url
         self.find_methods = [
@@ -281,7 +281,11 @@ class WebScrapper(object):
             self.driver.execute_script(code)
 
 def main():
-    scrapper = WebScrapper("https://docs.google.com/forms/d/e/1FAIpQLSc1QU6g2ncjgnyYr_rUOz1O4yOWV32elS0ZIRhSUYoaPgeHew/viewform")
+    scrapper = WebScrapper(
+            "/home/joel/Apps/chromedriver",
+            "https://docs.google.com/forms/d/e/1FAIpQLSc1QU6g2ncjgny \
+            Yr_rUOz1O4yOWV32elS0ZIRhSUYoaPgeHew/viewform"
+        )
 
     sleep(1)
 
