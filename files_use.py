@@ -2,19 +2,14 @@
 # -*- coding:utf-8 -*-
 
 """
-Clase para facilitar el uso de archivos.
-
-Pensada para obviar criterios predefinidos, y proveer
-funciones depuradas que suelen repetirse en muchos
-algoritmos de automatizacion.
-
+Class to simplify use of files.
 """
 
 import glob, os, re
 from datetime import datetime
 
 class FileUse(object):
-    """Clase dedicada a facilitar el uso de archivos y directorios"""
+    """Class to simplify use of files"""
     def __init__(self):
         super(FileUse, self).__init__()
         self.dirs = []
@@ -22,7 +17,7 @@ class FileUse(object):
 
     def list_all(self, path):
         """
-        Devuelve todo el contenido recursivamente
+        Return all the content recursively.
         """
         for root, dirs, files in os.walk(path):
             for directorio in dirs:
@@ -32,23 +27,23 @@ class FileUse(object):
 
         return self.dirs, self.files
 
-    def list_dirs(self, filtro=''):
+    def list_dirs(self, filter_re=''):
         """
-        Devuelve todos los directorios de un directorio raiz.
+        Returns all the folder of the root directory.
 
-         - Si se le pasa filtro como una expresion regular, puede
-           filtrar los elementos que la cumplan
+         - If it receives filter_re as a regular expression, it can
+           filter elements that satify the criterion.
         """
-        regex = re.compile(filtro)
+        regex = re.compile(filter_re)
 
         return list(filter(regex.search, self.dirs))
 
     def list_files(self, filtro=''):
         """
-        Devuelve todos los archivos de un directorio.
+        Returns all the files of the root dir.
 
-         - Si se le pasa filtro como una expresion regular, puede
-           filtrar los elementos que la cumplan
+         - If it receives filter_re as a regular expression, it can
+           filter elements that satify the criterion.
         """
         regex = re.compile(filtro)
 
@@ -56,8 +51,8 @@ class FileUse(object):
 
     def get_files_extensions(self):
         """
-        Genera un diccionario con cada extension que se puede
-        encontrar en la lista de archivos y las veces que aparecen.
+        Generates and dict object with each extension as keys,
+        and the number of ocurrences of each one as values.
         """
         exts = {}
 
@@ -73,11 +68,11 @@ class FileUse(object):
 
     def get_file_info(self, file):
         """
-        Recibe el nombre completo de un archivo y devuelve:
-         - El path.
-         - El nombre del archivo en si mismo.
-         - La extension.
-        En ese orden.
+        Receives the complete name of a file and returns:
+
+            - Path.
+            - Name itself.
+            - Extension.
         """
         path = os.path.dirname(file)
 
@@ -90,13 +85,12 @@ class FileUse(object):
 
     def create_file(self, path="", filename="", extension="", ow=False):
         """
-        Crea un archivo vacio.
-
-         - Si ya hay un archivo con ese nombre:
-          - ow == False: Busca otro nombre iterativamente
-          - ow == True: Lo sobreescribe
-         - Retorna el objeto FILE
-         - Si no se le pasa nombre, lo genera con la fecha de hoy
+        Creates a empty file:
+            - If exists a file with its name:
+                - If not ow: Search another name iteratively.
+                - If ow: Overwrites it.
+            - Return a FILE object.
+            - If it not receives a name, generates it with current date.
         """
         if extension == "":
                 extension = "txt"

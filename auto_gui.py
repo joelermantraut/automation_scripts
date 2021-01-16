@@ -2,11 +2,7 @@
 # -*- coding:utf-8 -*-
 
 """
-Clase que facilita el uso de PyAutoGUI para multiples aplicaciones.
-
-Fuente:
-https://pyautogui.readthedocs.io/en/latest/
-https://pyautogui.readthedocs.io/en/latest/quickstart.html
+Class to simplify the use of PyAutoGUI to multiple applications.
 """
 
 import pyautogui
@@ -15,7 +11,7 @@ from files_use import FileUse
 from threading import Thread
 
 class AutoGUI(object):
-    """Clase que facilita el uso de PyAutoGUI para multiples aplicaciones"""
+    """Class to simplify the use of PyAutoGUI to multiple applications."""
     def __init__(self):
         super(AutoGUI, self).__init__()
         self.special_keys = [
@@ -26,7 +22,7 @@ class AutoGUI(object):
 
     def init(self):
         """
-        Inicializa el objeto de control de archivos.
+        Inits file control. 
         """
         self.files_control = FileUse()
             
@@ -37,6 +33,12 @@ class AutoGUI(object):
          - Si se le pasa una suma de teclas, mantiene las modificadoras
            y presiona las comunes.
          - Si se le pasan modificadoras solas las presiona.
+
+        Press keys or write keys_list content.
+
+         - If it receives keys between '+', press modifiers and press
+           the last key in the list.
+         - If only receives modifiers, retains them.
         """
         if keys_list:
             for key in keys_list:
@@ -51,12 +53,12 @@ class AutoGUI(object):
 
     def mouse_move(self, move=None, rel=False, drag=False, function=None, iters=1):
         """
-        Mueve el mouse segun move.
-
-         - Si recibe una funcion, ejecuta la funcion despues de cada ciclo.
-         - "rel" habilita el movimiento relativo.
-         - "drag" mueve el mouse con un boton presionado.
-         - Si no recibe coordenadas (move), devuelve la posicion actual del mouse
+        Moves the mouse.
+        
+         - If receives a function, executes the function before each cycle.
+         - If rel, enables relative move.
+         - If drag, retains press the left button.
+         - If move is none, return mouse current position.
         """
         if move == None:
             return pyautogui.position()
@@ -82,13 +84,13 @@ class AutoGUI(object):
 
     def click(self, mode, clicks=1):
         """
-        Clickea en la posicion en la que se encuentra el mouse.
-        Si mode:
-         - 0: Click izquierdo, una vez
-         - 1: Click derecho
-         - 2: Doble click
-         - 3: Triple click
-         - 4: Click medio
+        Clicks in the position where the mouse is.
+        If mode:
+            - 0: Left click.
+            - 1: Right click.
+            - 2: Double click.
+            - 3: Triple click.
+            - 4: Middle click.
         """
         if mode == 0:
             pyautogui.click()
@@ -103,9 +105,9 @@ class AutoGUI(object):
 
     def scroll(self, amount, percent=False):
         """
-        Baja o sube en la pantalla.
+        Scrolls up or down.
 
-         - Si percent == True, se mueve ese porcentaje del alto de la pantalla
+         - If percent, moves that precentage of screen.
         """
         if percent:
             amount = int((amount / 100) * self.get_screen_properties()[0])
@@ -114,13 +116,13 @@ class AutoGUI(object):
 
     def get_screen_properties(self):
         """
-        Devuelve las propiedades fundamentales de la pantalla.
+        Returns screen propierties.
         """
         return list(pyautogui.size())
 
     def save_screenshot(self, filename=""):
         """
-        Obtiene una captura de pantalla y la guarda en un archivo
+        Get a snapshot and saves it in a file.
         """
         file = self.files_control.create_file(filename, extension = "png")
 
@@ -128,9 +130,9 @@ class AutoGUI(object):
 
     def get_on_screen(self, image):
         """
-        Funciones que obtienen imagenes en pantalla y su locacion.
+        Search for a image on screen.
 
-         - Usar OpenCV para localizacion avanzada.
+         - If OpenCV is in use, it enables an advance searching.
         """
         try:
             coordenadas = locateCenterOnScreen(image, grayscale=True)
@@ -141,7 +143,7 @@ class AutoGUI(object):
 
     def gui_functions(self, kind, options):
         """
-        Funcion que decide que interfaz usar y la genera.
+        Function that decides which interface use and generates it.
         """
         if kind == "alert":
             result = pyautogui.alert(title=options[0], text=options[1], button=options[2])
@@ -153,7 +155,7 @@ class AutoGUI(object):
             result = pyautogui.password(title=options[0], text=options[1], default=options[2], mask='*')
 
         options[3](result)
-        # Funcion que recibe la respuesta
+        # Function called with the answer
 
     def gui(self, kind, options, asyncronous=False):
         """
@@ -161,11 +163,17 @@ class AutoGUI(object):
 
          - type define el tipo de interfaz
          - options es una lista con los parametros que toma solo los necesarios
+
+        Includes all posible GUI that pyautogui offers in a function.
+
+         - type defines the type of the GUI.
+         - options is a list with the needed parameters. If is receives less
+           than needed, returns None. If it receives more, use only needed.
         """
         if len(options) != 4:
             return None
-        # Siempre recibe cuatro parametros
-        # El ultimo es la funcion a la que se le pasa la respuesta
+        # PyAutoGUI function uses three parameters, the las one is
+        # the function which receives the result.
 
         if asyncronous:
             self.hilo = Thread(target=self.gui_functions, args=(kind, options,))

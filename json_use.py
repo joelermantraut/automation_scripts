@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Clase para facilitar el uso y acceso de archivos JSON.
+Class to simplify the use and access of JSON files.
 """
 
 import json
 
 class JSONUse(object):
-    """Clase para facilitar el uso y acceso de archivos JSON"""
+    """Class to simplify the use and access of JSON files."""
     def __init__(self, file=None):
         super(JSONUse, self).__init__()
         self.file = file
@@ -16,10 +16,10 @@ class JSONUse(object):
 
     def serialize(self, data, own_decoder=None):
         """
-        Serializa la informacion que se le pasa
-         - Si no se le pasa archivo, devuelve
-         - Si se le pasa get lo mismo
-         - Permite que se pase un decodificador propio
+        Serializes the information that receives:
+            - If it not receives file, return the one generated.
+            - If not get, same result.
+            - Enable own decoder.
         """
         if self.file:
                 json.dump(data, self.file, indent = 4, default = own_decoder)
@@ -28,9 +28,10 @@ class JSONUse(object):
 
     def deserialize(self):
         """
-        Deserializa la informacion.
-         - Si hay un archivo, desde ahi.
-         - Si no desde el miembro de la clase.
+        Deserialize info.
+         - If there is a file, from it.
+         - Else, from a class member.
+
         """
         if self.file:
                 return json.load(self.file)
@@ -53,7 +54,7 @@ def main():
     }
     """
 
-    file = open("prueba.json", "w")
+    file = open("test.json", "w")
 
     json_object = JSONUse(file)
 

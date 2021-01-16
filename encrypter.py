@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Clase para facilitar el uso de la encriptacion y
-desencriptacion de cadenas.
+Class to simplify the uses of encryption in strings.
 """
 
 from cryptography.fernet import Fernet
@@ -11,8 +10,7 @@ import base64 # Para decodificar
 
 class Encrypter(object):
     """
-    Clase para facilitar el uso de la encriptacion y
-    desencriptacion de cadenas.
+    Class to simplify the uses of encryption in strings.
     """
     def __init__(self):
         super(Encrypter, self).__init__()
@@ -21,23 +19,22 @@ class Encrypter(object):
 
     def init(self):
         """
-        Inicializa las encriptacion.
+        Inits encryption. 
         """
         key = Fernet.generate_key()
         self.fernet = Fernet(key)
 
     def encode_encrypt(self, data):
         """
-        Codifica a bytes con base64 y encripta.
+        Codes to bytes with base64 and encrypts.
         """
         return self.fernet.encrypt(data.encode('ascii'))
 
     def encrypt(self, data):
         """
-        Encripta la informacion que recibe.
+        Encrypts the info that receives.
 
-         - Si recibe una lista, devuelve una lista con
-           cada elemento encriptado.
+         - If receives a list, encrypts each one.
         """
         if type(data) is list:
                 new_data = []
@@ -52,16 +49,16 @@ class Encrypter(object):
 
     def decode_decrypt(self, data):
         """
-        Desencripta y decodifica de bytes a string con base64.
+        Decrypts and decode from bytes to string with base64.
         """
         return self.fernet.decrypt(data, None).decode()
 
     def decrypt(self, data):
         """
-        Desencripta la informacion encriptada que recibe.
+        Decrypts.
 
-         - Verifica que este encriptada.
-         - Si es una lista, devuelve cada elemento desencriptado.
+         - Verifies if it is encrypted.
+         - If it is a list, decrypts each one.
         """
         if type(data) is list:
                 new_data = []
