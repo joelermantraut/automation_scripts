@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 """
-Clase para facilitar el parseo del contenido de una pagina WEB.
+Class to simplify parsing of WEB content.
 """
 
 import requests
@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from bs4 import Comment
 
 class WebParsing(object):
-    """Clase para facilitar el parseo del contenido de una pagina WEB"""
+    """Class to simplify parsing of WEB content."""
     def __init__(self, url):
         super(WebParsing, self).__init__()
         self.url = url
@@ -20,14 +20,14 @@ class WebParsing(object):
 
     def init(self):
         """
-        Inicializa la pagina y el objeto de BeautifulSoup
+        Inits page and beautifulsoup object.
         """
         self.page = requests.get(self.url)
         self.soup = BeautifulSoup(self.page.content, 'html.parser')
 
     def get_title(self):
         """
-        Devuelve el titulo de la pagina en formato texto
+        Return page title in text format.
         """		
         return self.soup.title.text
 
@@ -37,19 +37,24 @@ class WebParsing(object):
 
          - Emplea selectores CSS.
          - Devuelve una lista, NO un objeto ResultSet
+        
+        Get corresponding elements.
+
+         - Use CSS selectors.
+         - Returns a list, not ResultSet Object.
         """
         return [element for element in self.soup.select(selector)]
 
     def get_family(self, elements):
         """
-        Devuelve una lista con:
-         - El padre del elemento
-         - El elemento
-         - El hermano anterior
-         - El hermano siguiente
+        Return a list with:
+            - Parent of element.
+            - Element.
+            - The next sibling.
+            - The previous sibling.
 
-         - Si recibe una lista, realiza el proceso para cada
-           elemento de la lista
+        If it receives a list, does the same process
+        with each element.
         """
         if type(elements) is not list:
                 elements = [elements]
@@ -74,11 +79,10 @@ class WebParsing(object):
 
     def get_comments(self, elements):
         """
-        Obtiene todos los comentarios del bloque
-        de codigo que se le pasa.
+        Get all comment of the block of code that is given.
 
-         - Si se le pasa una lista realiza el proceso para
-           todos los elementos de la lista
+         - if it is given a list, does the same with each
+           element.
         """
         if type(elements) is not list:
                 elements = [elements]
@@ -91,11 +95,10 @@ class WebParsing(object):
 
     def get_properties(self, elements, properties):
         """
-        Devuelve la propiedad o atributo pedido.
+        Return the property or attributes require.
 
-         - Le es indistinto si le piden uno u otro
-         - Si le pasan una lista realiza el proceso con cada
-           elemento de la lista
+         - It is the if is required an attribute or a property.
+         - If it receives a list, does the same with each element.
         """
         if type(elements) is not list:
                 elements = [elements]
@@ -108,20 +111,19 @@ class WebParsing(object):
                 for proper in properties:
                         try:
                                 new_elements.append(element[proper])
-                                # Para cuando es una propiedad
+                                # Properties
                         except KeyError as e:
                                 new_elements.append(getattr(element, proper))
-                                # Para cuando es un atributo
+                                # Attributes
 
         return new_elements
 
     def prettify(self, elements):
         """
-        Devuelve el mismo contenido pero identado y adaptado
-        para ser presentado de forma mas prolija.
+        Returns the same content but indented and adapted to
+        be presented.
 
-         - Si le pasan una lista realiza el proceso con cada
-           elemento de la lista
+         - If it receives a list, does the same with each element.
         """
         if type(elements) is not list:
                 elements = [elements]

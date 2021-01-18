@@ -4,10 +4,6 @@
 
 Class to simplify the use of the mouse.
 
-TODO:
-
-    - Añadir las funciones de monitoreo.
-
 """
 
 from pynput import mouse

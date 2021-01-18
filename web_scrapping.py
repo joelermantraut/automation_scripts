@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 
 """
-Clase para facilitar la interaccion con un sitio WEB.
+Class to simplify WEB scrapping.
 
-Emplea Selenium junto con Chrome Driver.
+Uses Selenium with Chrome Driver.
 """
 
 from selenium import webdriver
@@ -15,10 +15,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 # Selenium imports
 from time import sleep
-# Standar Python
+# Standard Python
 
 class WebScrapper(object):
-    """Clase dedicada a scrappear un sitio WEB mediante Chromedriver"""
+    """Class to simplify WEB scrapping"""
     def __init__(self, PATH, url):
         super(WebScrapper, self).__init__()
         self.PATH = PATH
@@ -38,62 +38,86 @@ class WebScrapper(object):
             "ctrl": Keys.CONTROL,
             "alt": Keys.ALT,
             "shift": Keys.SHIFT,
+        }
+        self.special_strings = {
             "enter": Keys.RETURN,
-            "backspace": Keys.BACKSPACE,
             "arrow_down": Keys.ARROW_DOWN,
             "arrow_up": Keys.ARROW_UP,
             "arrow_left": Keys.ARROW_LEFT,
             "arrow_right": Keys.ARROW_RIGHT,
+            "backspace": Keys.BACKSPACE,
             'page_up': Keys.PAGE_UP,
             'page_down': Keys.PAGE_DOWN,
             "delete": Keys.DELETE,
             "escape": Keys.ESCAPE,
             "space": Keys.SPACE,
-            "tab": Keys.TAB
+            "tab": Keys.TAB,
+            "equal": Keys.EQUALS,
+            "home": Keys.HOME,
+            "insert": Keys.INSERT,
+            "F1": Keys.F1,
+            "F2": Keys.F2,
+            "F4": Keys.F3,
+            "F5": Keys.F4,
+            "F5": Keys.F5,
+            "F6": Keys.F6,
+            "F7": Keys.F7,
+            "F8": Keys.F8,
+            "F9": Keys.F9,
+            "F10": Keys.F10,
+            "F11": Keys.F11,
+            "F12": Keys.F12,
+            "F13": Keys.F13,
+            "F14": Keys.F14,
+            "F15": Keys.F15,
+            "F16": Keys.F16,
+            "F17": Keys.F17,
+            "F18": Keys.F18,
+            "F19": Keys.F19,
+            "F20": Keys.F20,
         }
         self.init()
 
     def init(self):
         """
-        Inicializa el WebDriver
+        Inits WebDriver.
         """
         self.driver = webdriver.Chrome(self.PATH)
         self.driver.get(self.url)
 
     def quit(self):
         """
-        Cierra el ChromeDriver
+        Closes ChromeDriver.
         """
         self.driver.quit()
 
     def get_title(self):
         """
-        Obtiene el titulo del sitio.
+        Gets site title.
         """
         return self.driver.title
 
     def maximize(self):
         """
-        Maximiza la ventana
+        Maximize window.
         """
         self.driver.maximize_window()
 
     def refresh(self):
         """
-        Refresca la pagina
+        Refresh page.
         """
         self.driver.refresh()
 
     def get_elements(self, selector, roots=None):
         """
-        Obtiene el objeto y lo devuelve.
+        Gets object and return it.
 
-        IMPORTANTE:
-         - Si se le pasa root, usa ese elemento como raiz
-         - Si no, usa el driver
-         - Emplea los selectores de css
-
-        FUENTE:
+        IMPORTANT:
+            - If is given root, use it instead of root.
+            - Else, use the driver.
+            - Uses CSS selectors.
+        SOURCE:
         https://selenium-python.readthedocs.io/locating-elements.html
         """
         if roots == None:
@@ -110,19 +134,19 @@ class WebScrapper(object):
 
     def process_keys(self, element, key):
         """
-        Decide que teclas presionar.
+        Decides with keys press.
 
-         - Si recibe una combinacion: tecla + tecla, obtiene las
-           teclas modificadores, las mantiene y presionas las otras.
+         - If it receives a combination, like key + key, get the
+           modifiers, and presses it while tapping the other.
         """
-        if '+' in key and len(key) > 1: # Si esta el + pero no es solo un +
-            keys = key.split('+') # Divide la cadena para obtener las teclas
+        if '+' in key and len(key) > 1:
+            keys = key.split('+')
 
-            for key in keys: # Sirve para cualquier cantidad de modificadores
+            for key in keys: # Useful for any number of modifiers 
                 if key in self.modifier_strings.keys():
                     key = self.modifier_strings[key]
                     ActionChains(self.driver).key_down(key).perform()
-                # Obtiene el objeto de Selenium que corresponde a la modificadora
+                # Gets Selenium Object 
                 else:
                     if element is None:
                             ActionChains(self.driver).send_keys(key).perform()
@@ -133,13 +157,14 @@ class WebScrapper(object):
                 if key in self.modifier_strings.keys():
                     key = self.modifier_strings[key]
                     ActionChains(self.driver).key_up(key).perform()
-            # Suelta todas los modificadores
+            # Releases all modifiers pressed
 
         else:
-            # Para teclas individuales
             if key in self.modifier_strings.keys():
                 key = self.modifier_strings[key]
-            # Verificamos si es una tecla especial
+            elif key in self.special_strings.keys():
+                key = self.special_strings[key]
+            # Verifies if key is a special key
 
             if element is None:
                 ActionChains(self.driver).send_keys(key).perform()
@@ -148,29 +173,32 @@ class WebScrapper(object):
 
     def send_keys(self, elements, keys_list):
         """
-        Recibe una lista de teclas y las ejecuta una por una.
+        Receives a list of keys and executes each one.
 
-         - Si recibe un numero es el retardo hasta la proxima tecla.
-         - Para enviar un numero debe recibir una cadena numerica.
-         - Si element es una lista, ejecuta las acciones en cada elemento de la lista.
+         - If it receives a number, it will be a delay up to next press.
+         - To send a number, it must receives it as a string.
+         - If element is a list, executes each one.
         """
         if type(elements) is not list:
             elements = [elements]
+        if type(keys_list) is not list:
+            keys_list = [keys_list]
 
         for element in elements:
             for key in keys_list:
-                if type(key) is int: # Es un numero
-                    sleep(key) # Espero ese tiempo
+                if type(key) is int:
+                    sleep(key)
                 else:
                     self.process_keys(element, key)
 
     def click_elements(self, elements=None, times=1):
         """
-        Clickea el elemento que se le pasa
-         - Si recibe una lista, clickea cada elemento
-         - Times: cantidad de veces que clickea el elemento
-         - Times == 0, presiona y mantiene
-         - Si no recibe elemento, clickea en la posicion actual del cursor
+        Clicks the element given:
+
+            - If receives a list, clicks each one.
+            - Times: Number of times of clicking.
+            - Times == 0: Presses and retains.
+            - If doesn't receive element, click in the current position.
         """
         if type(elements) is not list:
             elements = [elements]
@@ -185,16 +213,14 @@ class WebScrapper(object):
                         sleep(0.1) # 100ms
                 except Exception:
                     pass
-                # Excepcion para los casos en los que se presiona
-                # el elemento y eso lleva a una pagina en la que
-                # el elemento ya no esta.
+                # Exception for element which dissapear after
+                # an action.
 
     def move_mouse_to_element(self, element):
         """
-        Mueve el mouse a la mitad del elemento que se le pasa.
+        Moves the mouse to the middle of the element given.
 
-         - Si recibe una lista de mas de un elemento, no hace nada
-         - Si recibe uno solo, se queda con ese elemento
+         - If element is a list of len > 1, does nothing.
         """
 
         if type(element) is list and len(element) > 1:
@@ -214,7 +240,7 @@ class WebScrapper(object):
 
     def clear_content(self, elements):
         """
-        Pone en blanco input, textarea, etc.
+        Clears input, textarea, etc.
         """
 
         if type(elements) is not list:
@@ -225,14 +251,11 @@ class WebScrapper(object):
 
     def screenshot(self, elements, filename=None):
         """
-        Toma una captura del elemento que se le pasa
+        Takes a screenshot of the element given.
 
-         - Si se le pasan varios, toma de todos.
-         - Si alguna de las capturas devuelve False, devuelve False
-         - Si no devuelve True
-         - Si no se le pasa un nombre, usa el formato por defecto
-         - Si se le pasa un nombre, del segundo en adelante le agrega
-           un subindice
+         - If element is a list, repeats with each one.
+         - If any of the capture returns False, the function returns False.
+         - If it doesn't receives a name, use internal format.
         """
 
         if type(elements) is not list:
@@ -247,9 +270,10 @@ class WebScrapper(object):
 
     def get_properties(self, name, elements=None):
         """
-        Obtiene las propiedades o atributos del elemento
-         - Si no se le pasa elemento, del driver
-         - Si el nombre que se le pasa no existe, devuelve None
+        Gets properties or attributes of the element.
+
+         - If element == None, if the driver.
+         - If it doesn't exists, return None.
         """
         if elements == None:
             elements = self.driver
@@ -297,9 +321,9 @@ class WebScrapper(object):
 
     def scripting(self, code=None, filename=None):
         """
-        Ejecuta un script JS.
-
-         - Si lo que recibe es una lista de scripts, ejecuta uno por uno
+        Executes a JS script.
+        
+         - If code is a list, executes each one.
         """
         if filename != None:
             file = open(filename, 'r')
@@ -324,11 +348,7 @@ def main():
         "https://web.whatsapp.com" 
     )
 
-    sleep(5)
-
     element = scrapper.get_elements("._3soxC")
-    print(element)
-    # scrapper.move_mouse_to_element(element)
 
     sleep(5)
 

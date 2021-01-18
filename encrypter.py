@@ -6,7 +6,7 @@ Class to simplify the uses of encryption in strings.
 """
 
 from cryptography.fernet import Fernet
-import base64 # Para decodificar
+import base64 # To decode 
 
 class Encrypter(object):
     """
