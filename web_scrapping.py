@@ -57,8 +57,8 @@ class WebScrapper(object):
             "insert": Keys.INSERT,
             "F1": Keys.F1,
             "F2": Keys.F2,
-            "F4": Keys.F3,
-            "F5": Keys.F4,
+            "F3": Keys.F3,
+            "F4": Keys.F4,
             "F5": Keys.F5,
             "F6": Keys.F6,
             "F7": Keys.F7,
@@ -67,14 +67,6 @@ class WebScrapper(object):
             "F10": Keys.F10,
             "F11": Keys.F11,
             "F12": Keys.F12,
-            "F13": Keys.F13,
-            "F14": Keys.F14,
-            "F15": Keys.F15,
-            "F16": Keys.F16,
-            "F17": Keys.F17,
-            "F18": Keys.F18,
-            "F19": Keys.F19,
-            "F20": Keys.F20,
         }
         self.init()
 
@@ -205,7 +197,7 @@ class WebScrapper(object):
 
         for element in elements:
             if times == 0:
-                ActionChains(self.driver).click_and_hold(element).perform() 
+                ActionChains(self.driver).click_and_hold(element).perform()
             else:
                 try:
                     for i in range(times):
@@ -236,7 +228,7 @@ class WebScrapper(object):
         """
         Scrolls up to set a element_class in view position.
         """
-        self.scripting("document.getElementByClassName('{0}').scrollIntoView();".format(element_class))
+        self.scripting("document.getElementByClassName('{0}').scrollIntoView();".format(element))
 
     def clear_content(self, elements):
         """
@@ -244,7 +236,7 @@ class WebScrapper(object):
         """
 
         if type(elements) is not list:
-            elements = [elements] 
+            elements = [elements]
 
         for element in elements:
             element.clear()
@@ -268,6 +260,18 @@ class WebScrapper(object):
             else:
                 element.screenshot(filename + str(i) + '.png')
 
+    def remove_elements(self, elements):
+        """
+        Remove an element or a list of elements from the DOM.
+        """
+        if elements is not list:
+            elements = [elements]
+
+        for element in elements:
+            class_name = self.get_properties("class", element)[0]
+            self.scripting("return document.\
+                getElementsByClassName('{}')[0].remove();".format(class_name))
+
     def get_properties(self, name, elements=None):
         """
         Gets properties or attributes of the element.
@@ -289,7 +293,9 @@ class WebScrapper(object):
             elif name == 'selected':
                 attributes.append(element.is_selected())
             else:
-                attributes.append(element.get_attribute(name))
+                properties = self.get_all_properties(elements)[0]
+                if name in properties:
+                    attributes.append(properties[name])
 
         return attributes
 
@@ -302,7 +308,7 @@ class WebScrapper(object):
          - If no element is given, use the driver.
         """
         properties = list()
- 
+
         if elements == None:
             elements = self.driver
         elif type(elements) is not list:
@@ -322,7 +328,7 @@ class WebScrapper(object):
     def scripting(self, code=None, filename=None):
         """
         Executes a JS script.
-        
+
          - If code is a list, executes each one.
         """
         if filename != None:
@@ -345,10 +351,10 @@ class WebScrapper(object):
 def main():
     scrapper = WebScrapper(
         "/home/joel/Apps/chromedriver",
-        "https://web.whatsapp.com" 
+        "https://www.youtube.com"
     )
 
-    element = scrapper.get_elements("._3soxC")
+    element = scrapper.get_elements(".ytd-rich-shelf-renderer")[0]
 
     sleep(5)
 

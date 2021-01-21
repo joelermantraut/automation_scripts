@@ -21,9 +21,9 @@ class FileUse(object):
         """
         for root, dirs, files in os.walk(path):
             for directorio in dirs:
-                    self.dirs.append(os.path.abspath(directorio))
+                self.dirs.append(os.path.abspath(directorio))
             for file in files:
-                    self.files.append(os.path.abspath(file))
+                self.files.append(os.path.abspath(file))
 
         return self.dirs, self.files
 
@@ -57,19 +57,18 @@ class FileUse(object):
         exts = {}
 
         for file in self.files:
-                ext = re.search(r'\.(.+)$', file).group()
-                ext = ext[1:len(ext)]
-                if ext not in exts:
-                        exts[ext] = 1
-                else:
-                        exts[ext] += 1
+            ext = re.search(r'\.(.+)$', file).group()
+            ext = ext[1:len(ext)]
+            if ext not in exts:
+                    exts[ext] = 1
+            else:
+                    exts[ext] += 1
 
         return exts
 
     def get_file_info(self, file):
         """
         Receives the complete name of a file and returns:
-
             - Path.
             - Name itself.
             - Extension.
@@ -89,37 +88,47 @@ class FileUse(object):
             - If exists a file with its name:
                 - If not ow: Search another name iteratively.
                 - If ow: Overwrites it.
-            - Return a FILE object.
+            - Returns a FILE object.
             - If it not receives a name, generates it with current date.
         """
         if extension == "":
-                extension = "txt"
+            extension = "txt"
 
         if filename == "":
-                filename = datetime.now().date().__str__() + "." + extension
-                filename = filename.replace(" ", "_")
+            filename = datetime.now().date().__str__() + "." + extension
+            filename = filename.replace(" ", "_")
 
         if path == "":
-                path = os.getcwd()
+            path = os.getcwd()
 
         name = path + '\\' + filename
 
         if not(ow):
-                filename, ext = filename.split('.')[-2], filename.split('.')[-1]
-                if ext == "":
-                        ext = extension
-                name = path + '\\' + filename + '.' + ext
-                i = 1
-                while os.path.isfile(name):
-                        name = path + '\\' + filename + ' (' + str(i) + ').' + ext
-                        i += 1
+            filepath, filename, ext = self.get_file_info(filename)
+            if ext == "":
+                ext = extension
+            name = path + '\\' + filename + '.' + ext
+            i = 1
+            while os.path.isfile(name):
+                name = "{}/{} ({}).{}".format(path, filename, str(i), ext)
+                i += 1
 
         return open(name, 'w')
+
+    def remove_files(self, files):
+        """
+        Removes a file or a list of files.
+        """
+        if type(files) is not list:
+            files = [files]
+
+        for file in files:
+            os.remove(file)
 
 def main():
     file_object = FileUse()
 
-    print(file_object.get_file_info("/home/joel/apps/log.txt"))
+    print(file_object.create_file("/home/joel/Documentos/Centro", "hola", "txt"))
 
 if __name__ == "__main__":
     main()
