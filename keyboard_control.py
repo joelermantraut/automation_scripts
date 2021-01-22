@@ -5,13 +5,6 @@
 Module created to simplify the use of mouse.
 
 Maybe it could have problems with X display.
-
-TODO:
-
-    - Add the keyboard control functions.
-     - Terminar esto, hay algun problema
-       con presionar los modificadores.
-
 """
 
 from pynput import keyboard 

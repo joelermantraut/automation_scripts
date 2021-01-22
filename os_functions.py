@@ -14,7 +14,7 @@ import os
 import subprocess
 import psutil
 import screeninfo
-import platform 
+import platform
 
 def get_winfo(screen_num=None):
     """
@@ -27,7 +27,7 @@ def get_winfo(screen_num=None):
 
     if screen_num == None:
         return screens
-    
+
     if len(screens) > screen_num:
         return screens[screen_num]
     else:
@@ -38,7 +38,7 @@ def get_osinfo():
     Returns a tuple containing info
     about the system running.
     """
-    return platform.uname() 
+    return platform.uname()
 
 def run_cmd(cmd, output=False):
     """
@@ -53,7 +53,7 @@ def run_cmd(cmd, output=False):
     ).stdout.read().decode()
 
     if output:
-        return output_string 
+        return output_string
 
 def main():
     print(get_osinfo())

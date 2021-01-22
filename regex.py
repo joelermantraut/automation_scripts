@@ -8,13 +8,6 @@ regular expressions itself. It is needed
 to know how to use them. But it simplifies
 the use of functions findall, search and
 match.
-
-Tambien se puede evaluar la definicion de
-expresiones regulares mediante funciones
-concatenadas, pero esto puede no ser
-eficiente, ademas requerira un dominio
-solido del tema.
-
 """
 
 import re
@@ -29,13 +22,12 @@ def analyse(string, pattern, all=False):
 
     This is because usually findall is slower.
     """
-
     if all:
         # Find all ocurrences
         result = re.findall(pattern, string)
     else:
         result = re.search(pattern, string)
-        
+
         if result != None:
             result = result.groups()
         else:
@@ -44,7 +36,7 @@ def analyse(string, pattern, all=False):
     return result
 
 def main():
-    print(analyse("hola que tal", r'\s', all=True))
+    print(analyse("hi everyone", r'\s', all=True))
 
 if __name__ == "__main__":
     main()

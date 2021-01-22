@@ -1,12 +1,10 @@
 # -*- coding:utf-8 -*-
 
 """
-
 Class that simplifies the use of multiple
 threads, asynchronous, and with the ability
 to have a list of which of them are alive
 and to kill them.
-
 """
 
 import multiprocessing
@@ -16,7 +14,7 @@ import threading
 class ThreadControl(object):
     """Class to control multipl threads"""
     def __init__(self):
-        self.init() 
+        self.init()
 
     def init(self):
         pass
@@ -26,7 +24,7 @@ class ThreadControl(object):
         Creates a shared process.
         """
 
-        with Pool(n_processes) as p:
+        with multiprocessing.Pool(n_processes) as p:
             result = p.map(f, args)
 
         return result
@@ -54,7 +52,7 @@ class ThreadControl(object):
         """
         t_p = multiprocessing.dummy.Pool()
         result = self.run_tasks(function, numbers, t_p)
-       
+
         t_p.close()
         return result
 

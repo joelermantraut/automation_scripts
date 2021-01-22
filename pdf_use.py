@@ -67,7 +67,7 @@ class PDFUse(object):
 
         if regex:
             page_content = re.findall(regex, page_content)
-        
+
         return page_content
 
 def main():

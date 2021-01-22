@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-
 Class to simplify the use of the mouse.
-
 """
 
 from pynput import mouse
@@ -68,7 +66,7 @@ class MouseControl(object):
 
     def click(self, button, clicks=1):
         """
-        Click in the current position of the mouse. 
+        Click in the current position of the mouse.
         """
 
         button = self.mouse_buttons[button]
@@ -128,7 +126,7 @@ class MouseControl(object):
         arguments to set all properties.
         """
 
-        self.on_move_f = on_move 
+        self.on_move_f = on_move
         self.on_click_f = on_click
         self.on_scroll_f = on_scroll
 

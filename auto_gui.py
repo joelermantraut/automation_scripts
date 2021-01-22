@@ -22,19 +22,13 @@ class AutoGUI(object):
 
     def init(self):
         """
-        Inits file control. 
+        Inits file control.
         """
         self.files_control = FileUse()
-            
+
     def send_keys(self, keys_list=None):
         """
-        Presiona las teclas enviadas o escribe el contenido de la 'tecla'
 
-         - Si se le pasa una suma de teclas, mantiene las modificadoras
-           y presiona las comunes.
-         - Si se le pasan modificadoras solas las presiona.
-
-        Press keys or write keys_list content.
 
          - If it receives keys between '+', press modifiers and press
            the last key in the list.
@@ -54,7 +48,7 @@ class AutoGUI(object):
     def mouse_move(self, move=None, rel=False, drag=False, function=None, iters=1):
         """
         Moves the mouse.
-        
+
          - If receives a function, executes the function before each cycle.
          - If rel, enables relative move.
          - If drag, retains press the left button.
@@ -135,8 +129,8 @@ class AutoGUI(object):
          - If OpenCV is in use, it enables an advance searching.
         """
         try:
-            coordenadas = locateCenterOnScreen(image, grayscale=True)
-        except ImageNotFoundException as e:
+            coordenadas = pyautogui.locateCenterOnScreen(image, grayscale=True)
+        except pyautogui.ImageNotFoundException:
             coordenadas = False
 
         return coordenadas
@@ -159,11 +153,6 @@ class AutoGUI(object):
 
     def gui(self, kind, options, asyncronous=False):
         """
-        Engloba todas las posibles interfaces que ofrece pyautogui en una funcion.
-
-         - type define el tipo de interfaz
-         - options es una lista con los parametros que toma solo los necesarios
-
         Includes all posible GUI that pyautogui offers in a function.
 
          - type defines the type of the GUI.

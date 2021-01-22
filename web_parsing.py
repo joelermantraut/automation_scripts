@@ -28,7 +28,7 @@ class WebParsing(object):
     def get_title(self):
         """
         Return page title in text format.
-        """		
+        """
         return self.soup.title.text
 
     def get_elements(self, selector):
@@ -37,7 +37,7 @@ class WebParsing(object):
 
          - Emplea selectores CSS.
          - Devuelve una lista, NO un objeto ResultSet
-        
+
         Get corresponding elements.
 
          - Use CSS selectors.
