@@ -13,9 +13,10 @@ It includes:
  - Simplify use of regular expressions functions, without need
    to decide if use match, search of findall.
  - Web parsing to get information of web pages.
- - Web navigation with chrome driver.
+ - Web scrapping with chrome driver.
  - Multiprocessing management.
+ - Advance printing functions.
 
- The idea is to include this files like python modules and to
+ The idea is to include this files like python modules and 
  use them without needing to pay attention to exceptions or
  whims of each module.
