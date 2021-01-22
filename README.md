@@ -17,6 +17,13 @@ It includes:
  - Multiprocessing management.
  - Advance printing functions.
 
- The idea is to include this files like python modules and 
- use them without needing to pay attention to exceptions or
- whims of each module.
+## Usage
+
+The idea is to include this files like python modules and 
+use them without needing to pay attention to exceptions or
+whims of each module.
+ 
+## Important
+
+This scripts are in development staged. They had been tested, but can have errors
+or fail eventually. Take care on it use.
