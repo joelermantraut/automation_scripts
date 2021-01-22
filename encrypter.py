@@ -19,7 +19,7 @@ class Encrypter(object):
 
     def init(self):
         """
-        Inits encryption. 
+        Inits encryption.
         """
         key = Fernet.generate_key()
         self.fernet = Fernet(key)
@@ -33,17 +33,16 @@ class Encrypter(object):
     def encrypt(self, data):
         """
         Encrypts the info that receives.
-
          - If receives a list, encrypts each one.
         """
         if type(data) is list:
-                new_data = []
-                for dat in data:
-                        new_data.append(self.encode_encrypt(dat))
+            new_data = []
+            for dat in data:
+                new_data.append(self.encode_encrypt(dat))
 
-                data = new_data
+            data = new_data
         else:
-                data = self.encode_encrypt(data)
+            data = self.encode_encrypt(data)
 
         return data
 
@@ -56,27 +55,28 @@ class Encrypter(object):
     def decrypt(self, data):
         """
         Decrypts.
-
          - Verifies if it is encrypted.
          - If it is a list, decrypts each one.
         """
         if type(data) is list:
-                new_data = []
-                for dat in data:
-                        try:
-                                new_data.append(self.decode_decrypt(data))
-                        except InvalidToken:
-                                return None
-        else:
+            new_data = []
+            for dat in data:
                 try:
-                        return self.decode_decrypt(data)
+                    new_data.append(self.decode_decrypt(dat))
                 except InvalidToken:
-                        return None
+                    return None
+        else:
+            try:
+                return self.decode_decrypt(data)
+            except InvalidToken:
+                return None
 
 def main():
     encriptador = Encrypter()
 
-    print(encriptador.encrypt('hola'))
+    encriptado = encriptador.encrypt('hola')
+    print(encriptado)
+    print(encriptador.decrypt(encriptado))
 
 if __name__ == "__main__":
     main()
