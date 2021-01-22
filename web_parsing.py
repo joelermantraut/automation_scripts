@@ -33,11 +33,6 @@ class WebParsing(object):
 
     def get_elements(self, selector):
         """
-        Obtiene los elementos que corresponden al selector.
-
-         - Emplea selectores CSS.
-         - Devuelve una lista, NO un objeto ResultSet
-
         Get corresponding elements.
 
          - Use CSS selectors.
@@ -57,22 +52,22 @@ class WebParsing(object):
         with each element.
         """
         if type(elements) is not list:
-                elements = [elements]
+            elements = [elements]
 
         new_elements = []
         for element in elements:
-                padre = element.parent
-                menor = element.find_previous()
-                if menor["class"] != padre["class"]:
-                        menor = None
-                mayor = element.find_next()
-                if mayor["class"] != mayor["class"]:
-                        mayor = None
-                new_elements.append([
-                        padre,
-                        element,
-                        menor,
-                        mayor
+            padre = element.parent
+            menor = element.find_previous()
+            if menor["class"] != padre["class"]:
+                    menor = None
+            mayor = element.find_next()
+            if mayor["class"] != mayor["class"]:
+                    mayor = None
+            new_elements.append([
+                    padre,
+                    element,
+                    menor,
+                    mayor
                 ])
 
         return new_elements
@@ -89,7 +84,7 @@ class WebParsing(object):
 
         new_elements = []
         for element in elements:
-                new_elements.append(self.soup.find_all(string=lambda text: isinstance(text, Comment)))
+            new_elements.append(self.soup.find_all(string=lambda text: isinstance(text, Comment)))
 
         return new_elements
 
@@ -108,13 +103,13 @@ class WebParsing(object):
 
         new_elements = []
         for element in elements:
-                for proper in properties:
-                        try:
-                                new_elements.append(element[proper])
-                                # Properties
-                        except KeyError as e:
-                                new_elements.append(getattr(element, proper))
-                                # Attributes
+            for proper in properties:
+                try:
+                    new_elements.append(element[proper])
+                    # Properties
+                except KeyError as e:
+                    new_elements.append(getattr(element, proper))
+                    # Attributes
 
         return new_elements
 
@@ -130,7 +125,7 @@ class WebParsing(object):
 
         new_elements = []
         for element in elements:
-                new_elements.append(element.prettify())
+            new_elements.append(element.prettify())
 
         return new_elements
 

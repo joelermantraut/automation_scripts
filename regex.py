@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 """
-
 Class to simplify use of regular expressions
 functions. It is not to simplify use of
 regular expressions itself. It is needed

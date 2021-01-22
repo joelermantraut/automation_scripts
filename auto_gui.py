@@ -28,7 +28,7 @@ class AutoGUI(object):
 
     def send_keys(self, keys_list=None):
         """
-
+        Press keys or write keys_list content.
 
          - If it receives keys between '+', press modifiers and press
            the last key in the list.
@@ -161,7 +161,7 @@ class AutoGUI(object):
         """
         if len(options) != 4:
             return None
-        # PyAutoGUI function uses three parameters, the las one is
+        # PyAutoGUI function uses three parameters, the last one is
         # the function which receives the result.
 
         if asyncronous:
