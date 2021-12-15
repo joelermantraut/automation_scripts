@@ -133,8 +133,8 @@ class FileUse(object):
 
 def main():
     file_object = FileUse()
-
-    print(file_object.list_all(file_object.actual_dir()))
+    all_files = file_object.list_all(file_object.actual_dir())
+    print(file_object.list_files())
 
 if __name__ == "__main__":
     main()
