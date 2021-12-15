@@ -39,14 +39,27 @@ class Printer(object):
                 self.back_colors[back_color]
             )
 
-    def print_c(self, text, text_color="black", back_color="black"):
+    def print_c(self, text, text_color="white", back_color="black"):
         """
         Prints with the given format.
         """
-        print(self.pre_string(text_color, back_color) + text)
+        print(
+            self.pre_string(text_color, back_color) +
+            text +
+            self.pre_string("white", "black")
+        )
+
+    def special_print(self, struct):
+        """
+        Prints an object in a special way, for simplified view.
+        """
+        if type(struct) == list:
+            print("list")
 
 def main():
     Printer().print_c("hello", text_color="red", back_color="blue")
+
+    Printer().special_print(["hola", "que", "tal"])
 
 if __name__ == "__main__":
     main()

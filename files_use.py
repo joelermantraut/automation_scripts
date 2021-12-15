@@ -15,9 +15,15 @@ class FileUse(object):
         self.dirs = []
         self.files = []
 
+    def actual_dir(self):
+        """
+        Gets actual dir of running file.
+        """
+        return os.getcwd()
+
     def list_all(self, path):
         """
-        Return all the content recursively.
+        Returns all the content recursively.
         """
         for root, dirs, files in os.walk(path):
             for directorio in dirs:
@@ -51,7 +57,7 @@ class FileUse(object):
 
     def get_files_extensions(self):
         """
-        Generates and dict object with each extension as keys,
+        Generates an dict object with each extension as keys,
         and the number of ocurrences of each one as values.
         """
         exts = {}
@@ -60,9 +66,9 @@ class FileUse(object):
             ext = re.search(r'\.(.+)$', file).group()
             ext = ext[1:len(ext)]
             if ext not in exts:
-                    exts[ext] = 1
+                exts[ext] = 1
             else:
-                    exts[ext] += 1
+                exts[ext] += 1
 
         return exts
 
@@ -128,7 +134,7 @@ class FileUse(object):
 def main():
     file_object = FileUse()
 
-    print(file_object.create_file("/home/joel/Documentos/Centro", "hola", "txt"))
+    print(file_object.list_all(file_object.actual_dir()))
 
 if __name__ == "__main__":
     main()

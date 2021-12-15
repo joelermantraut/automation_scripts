@@ -56,18 +56,18 @@ class WebParsing(object):
 
         new_elements = []
         for element in elements:
-            padre = element.parent
-            menor = element.find_previous()
-            if menor["class"] != padre["class"]:
-                    menor = None
-            mayor = element.find_next()
-            if mayor["class"] != mayor["class"]:
-                    mayor = None
+            father = element.parent
+            lower = element.find_previous()
+            if lower["class"] != father["class"]:
+                    lower = None
+            upper = element.find_next()
+            if upper["class"] != upper["class"]:
+                    upper = None
             new_elements.append([
-                    padre,
+                    father,
                     element,
-                    menor,
-                    mayor
+                    lower,
+                    upper
                 ])
 
         return new_elements

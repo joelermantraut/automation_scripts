@@ -11,7 +11,7 @@ match.
 
 import re
 
-def analyse(string, pattern, all=False):
+def analyse(string, pattern, use_all=False):
     """
     Analyses the regex and returns the
     result as a list.
@@ -21,7 +21,7 @@ def analyse(string, pattern, all=False):
 
     This is because usually findall is slower.
     """
-    if all:
+    if use_all:
         # Find all ocurrences
         result = re.findall(pattern, string)
     else:
@@ -35,7 +35,7 @@ def analyse(string, pattern, all=False):
     return result
 
 def main():
-    print(analyse("hi everyone", r'\s', all=True))
+    print(analyse("hi everyone", r'\s', use_all=True))
 
 if __name__ == "__main__":
     main()

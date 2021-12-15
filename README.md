@@ -27,3 +27,14 @@ whims of each module.
 
 This scripts are in development staged. They had been tested, but can have errors
 or fail eventually. Take care on it use.
+
+## Documentation
+
+To see documentation, import each module, and in python interpreter run:
+
+´´´
+help(module)
+´´´
+
+Each module has a little example function in main, probably used to test
+it.

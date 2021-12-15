@@ -17,7 +17,6 @@ def get_winfo(screen_num=None):
 
     screen_num: Number of screen if it exists.
     """
-
     screens = screeninfo.get_monitors()
 
     if screen_num == None:

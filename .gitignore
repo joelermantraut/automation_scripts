@@ -128,5 +128,17 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Virtualenv
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json
+
 # Specific files
 prueba.py

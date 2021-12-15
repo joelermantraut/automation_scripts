@@ -7,7 +7,7 @@ Module created to simplify the use of mouse.
 Maybe it could have problems with X display.
 """
 
-from pynput import keyboard 
+from pynput import keyboard
 import re
 import subprocess
 
@@ -85,10 +85,10 @@ class KeyboardControl(object):
         if alt_gr_map == None:
             """
             PROBLEM: And a big one. In too many layouts,
-            for this module, AltGr doesn't work like it,
+            for this module, AltGr doesn't work like it must,
             because it has another code. So, the only
             solution that I found, is to create a mapping.
-            But it depends on the layout. This one would 
+            But it depends on the layout. This one would
             work for me, but no for other.
             """
             self.alt_gr_map = {
@@ -114,7 +114,7 @@ class KeyboardControl(object):
                 'z': '«',
                 'x': '»'
             }
-        
+
         self.block_key = "ctrl+/esc"
         self.on_press_f = None
         self.on_release_f = None
@@ -139,7 +139,7 @@ class KeyboardControl(object):
     def get_key_str(self, key):
         key = key.__str__().split('.')[-1]
         key = re.search(r"[^'.+]+", key).group(0)
-    
+
         return key
 
     def check_lock_keys_state(self, lock_key):
@@ -200,7 +200,7 @@ class KeyboardControl(object):
             for modifier in self.last_modifiers:
                 if modifier in ['alt_gr', 'shift']: continue
                 key = modifier.__str__() + '+' + key
-                
+
         return key
 
     def on_press(self, key):
@@ -294,7 +294,7 @@ class KeyboardControl(object):
         if type(key_str) == list:
             for key in key_str:
                 if key in self.modifiers:
-                    keys.append(self.modifiers[key]) 
+                    keys.append(self.modifiers[key])
             return keys
         else:
             return self.modifiers[key_str]
@@ -313,7 +313,7 @@ class KeyboardControl(object):
                 if "+" in key and len(key) > 1:
                     keys = key.split("+")
 
-                    modifiers = self.get_key_from_str(keys[0:-1]) 
+                    modifiers = self.get_key_from_str(keys[0:-1])
                     # Supposing all keys are modifiers except
                     # last one
 
