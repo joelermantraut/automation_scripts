@@ -16,8 +16,8 @@ def analyse(string, pattern, use_all=False):
     Analyses the regex and returns the
     result as a list.
 
-    If time matters, the runs search.
-    If not, runs findall.
+    If time matters, then use "search".
+    If not, run findall.
 
     This is because usually findall is slower.
     """
@@ -27,10 +27,10 @@ def analyse(string, pattern, use_all=False):
     else:
         result = re.search(pattern, string)
 
-        if result != None:
-            result = result.groups()
-        else:
+        if result == None:
             result = []
+        else:
+            result = result.groups()
 
     return result
 
