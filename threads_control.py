@@ -22,6 +22,8 @@ import threading
 from queue import Queue
 from time import sleep
 import os
+from functools import partial
+import multiprocessing
 
 
 class StoppableThread(threading.Thread):
@@ -93,6 +95,45 @@ class MultipleThreads():
         thread.stop()
 
 
+class MultiProcess():
+    """
+    Runs multiple processes in parallel.
+    """
+    def __init__(self, n_processes, function, *args, **kwargs):
+        self.n_processes = n_processes
+        self.function = function
+        self.args = args
+        self.kwargs = kwargs
+        self.init()
+
+    def init(self):
+        self.prepare_func()
+
+    def prepare_func(self):
+        """
+        Gets args from kwargs parameter.
+
+        'freeze' must be a dict with parameters to freeze on partial
+        function creation.
+
+        'dynamic' must be a list with parameters to divide in each process.
+        """
+        freeze_args = dict() if 'freeze' not in self.kwargs.keys() else self.kwargs['freeze']
+        dynamic_args = list() if 'dynamic' not in self.kwargs.keys() else self.kwargs['dynamic']
+        partial_function = partial(self.function, **freeze_args)
+        # Creates partial function with freeze args
+        self._run_processes(partial_function, dynamic_args)
+
+    def _run_processes(self, partial_function, dynamic_args):
+        """
+        Runs parallel processes.
+        """
+        with multiprocessing.Pool(self.n_processes) as p:
+            p.map(partial_function, dynamic_args)
+            # Calls parallel functions with dynamic args
+            # This must be a list of lists... With the same number
+            # of elements in childs lists as n_processes
+
 class ThreadSystemInfo():
     """
     Collection of functions in a class to get info about
@@ -104,9 +145,20 @@ class ThreadSystemInfo():
     def cpu_count(self):
         return os.cpu_count()
 
+data = [
+    ['a', '2'], ['b', '4'], ['c', '6'], ['d', '8'],
+    ['e', '1'], ['f', '3'], ['g', '5'], ['h', '7']
+]
+
+def mp_worker(tupla, b):
+    inputs, the_time = tupla
+    the_time = the_time * b
+    print(f"Process {inputs}\tWaiting {the_time} seconds")
+    sleep(int(the_time))
+    print(f"Process {inputs}\tDONE")
 
 def message():
-    print("Message")
+    print("message")
 
 def main():
     thread_control = StoppableThread(target=message)
@@ -119,6 +171,8 @@ def main():
     multiple_threads.stop_all()
 
     print(ThreadSystemInfo().cpu_count())
+
+    multi = MultiProcess(2, mp_worker, dynamic=data, freeze={'b': 1})
 
 if __name__ == "__main__":
     main()
