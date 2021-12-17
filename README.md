@@ -14,7 +14,7 @@ It includes:
    to decide if use match, search of findall.
  - Web parsing to get information of web pages.
  - Web scrapping with chrome driver.
- - Multiprocessing management.
+ - Multiprocessing and threading management.
  - Advance printing functions.
 
 ## Usage
