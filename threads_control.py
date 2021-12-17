@@ -11,8 +11,6 @@ to control processes and threads.
 
 One class must be to have a process stoppable.
 Another one to control multiple threads automatically.
-Other class would give information about system, useful
-to decide how many threads to use.
 
 Really useful article to understand use of threads and processes.
 https://www.toptal.com/python/beginners-guide-to-concurrency-and-parallelism-in-python#:~:text=What's%20the%20difference%20between%20Python,child%20processes%20bypassing%20the%20GIL.
@@ -134,16 +132,10 @@ class MultiProcess():
             # This must be a list of lists... With the same number
             # of elements in childs lists as n_processes
 
-class ThreadSystemInfo():
-    """
-    Collection of functions in a class to get info about
-    system cores and processes.
-    """
-    def __init__(self):
-        pass
 
-    def cpu_count(self):
-        return os.cpu_count()
+# --------------------------------------------------
+# ------------------- MAIN CODE --------------------
+# --------------------------------------------------
 
 data = [
     ['a', '2'], ['b', '4'], ['c', '6'], ['d', '8'],

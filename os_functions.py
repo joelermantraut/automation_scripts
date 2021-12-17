@@ -49,6 +49,9 @@ def run_cmd(cmd, output=False):
     if output:
         return output_string
 
+def cpu_counts():
+    return os.cpu_counts()
+
 def main():
     print(get_osinfo())
     print(get_winfo())
