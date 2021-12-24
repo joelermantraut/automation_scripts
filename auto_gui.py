@@ -76,26 +76,20 @@ class AutoGUI(object):
             else:
                 pyautogui.moveTo(move[0], move[1])
 
-    def click(self, mode, clicks=1):
+    def click(self, mode=None, clicks=1):
         """
         Clicks in the position where the mouse is.
-        If mode:
-            - 0: Left click.
-            - 1: Right click.
-            - 2: Double click.
-            - 3: Triple click.
-            - 4: Middle click.
+
+        mode: Button to click.
+        clicks: number of clicks.
         """
-        if mode == 0:
-            pyautogui.click()
-        elif mode == 1:
-            pyautogui.click(button='right')
-        elif mode == 2:
-            pyautogui.click(clicks=2)
-        elif mode == 3:
-            pyautogui.click(clicks=clicks)
+
+        if mode == None:
+            button = 'left'
         else:
-            pyautogui.click(button='middle')
+            button = mode
+
+        pyautogui.click(button=button, clicks=clicks)
 
     def scroll(self, amount, percent=False):
         """
@@ -122,16 +116,26 @@ class AutoGUI(object):
 
         return pyautogui.screenshot(file.name)
 
-    def get_on_screen(self, image):
+    def get_on_screen(self, image, confidence=0.5):
         """
         Search for a image on screen.
 
          - If OpenCV is in use, it enables an advance searching.
+         - confidence parameter defines precision of searching. Needs OpenCV.
+
+        If no image was found, returns None.
         """
         try:
-            coordenadas = pyautogui.locateCenterOnScreen(image, grayscale=True)
+            if confidence < 0.9:
+                grayscale = True
+            else:
+                grayscale = False
+
+            coordenadas = pyautogui.locateCenterOnScreen(image, grayscale=grayscale, confidence=confidence)
         except pyautogui.ImageNotFoundException:
-            coordenadas = False
+            coordenadas = None
+        except NotImplementedError:
+            coordenadas = pyautogui.locateCenterOnScreen(image, grayscale=grayscale)
 
         return coordenadas
 
@@ -156,7 +160,7 @@ class AutoGUI(object):
         Includes all posible GUI that pyautogui offers in a function.
 
          - type defines the type of the GUI.
-         - options is a list with the needed parameters. If is receives less
+         - options is a list with the needed parameters. If it receives less
            than needed, returns None. If it receives more, use only needed.
         """
         if len(options) != 4:
@@ -172,10 +176,8 @@ class AutoGUI(object):
 
 def main():
     autogui = AutoGUI()
-
-    sleep(2)
-
-    autogui.send_keys(['esc'])
+    autogui.mouse_move((500, 500))
+    autogui.click(mode="right")
 
 if __name__ == "__main__":
     main()
