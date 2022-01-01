@@ -17,7 +17,7 @@ def analyse(string, pattern, use_all=False):
     result as a list.
 
     If time matters, then use "search".
-    If not, run findall.
+    If not, run findall, with use_all param.
 
     This is because usually findall is slower.
     """
