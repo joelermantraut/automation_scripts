@@ -41,16 +41,13 @@ def run_cmd(cmd, output=False):
     If output, returns the output.
     """
     output_string = subprocess.Popen(
-            cmd,
-            shell=True,
-            stdout=subprocess.PIPE
+        cmd,
+        shell=True,
+        stdout=subprocess.PIPE
     ).stdout.read().decode()
 
     if output:
         return output_string
-
-def cpu_counts():
-    return os.cpu_counts()
 
 def main():
     print(get_osinfo())
