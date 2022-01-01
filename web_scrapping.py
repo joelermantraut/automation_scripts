@@ -141,9 +141,9 @@ class WebScrapper(object):
                 # Gets Selenium Object 
                 else:
                     if element is None:
-                            ActionChains(self.driver).send_keys(key).perform()
+                        ActionChains(self.driver).send_keys(key).perform()
                     else:
-                            ActionChains(self.driver).send_keys_to_element(element, key).perform()
+                        ActionChains(self.driver).send_keys_to_element(element, key).perform()
 
             for key in keys:
                 if key in self.modifier_strings.keys():
@@ -214,7 +214,6 @@ class WebScrapper(object):
 
          - If element is a list of len > 1, does nothing.
         """
-
         if type(element) is list and len(element) > 1:
             return
         elif type(element) is list:
@@ -234,7 +233,6 @@ class WebScrapper(object):
         """
         Clears input, textarea, etc.
         """
-
         if type(elements) is not list:
             elements = [elements]
 
@@ -249,7 +247,6 @@ class WebScrapper(object):
          - If any of the capture returns False, the function returns False.
          - If it doesn't receives a name, use internal format.
         """
-
         if type(elements) is not list:
             elements = [elements]
 
