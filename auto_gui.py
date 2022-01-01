@@ -142,6 +142,11 @@ class AutoGUI(object):
     def gui_functions(self, kind, options):
         """
         Function that decides which interface use and generates it.
+
+        options, 0: title
+        options, 1: question text
+        options, 2: button text
+        options, 3: function to call with selection
         """
         if kind == "alert":
             result = pyautogui.alert(title=options[0], text=options[1], button=options[2])
