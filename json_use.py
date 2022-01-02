@@ -22,7 +22,7 @@ class JSONUse(object):
             - Enable own decoder.
         """
         if self.file:
-                json.dump(data, self.file, indent = 4, default = own_decoder)
+            json.dump(data, self.file, indent = 4, default = own_decoder)
 
         self.json_data = json.dumps(data, indent = 4, default = own_decoder)
 
@@ -31,12 +31,11 @@ class JSONUse(object):
         Deserialize info.
          - If there is a file, from it.
          - Else, from a class member.
-
         """
         if self.file:
-                return json.load(self.file)
+            return json.load(self.file)
         else:
-                return json.loads(self.json_data)
+            return json.loads(self.json_data)
 
 def main():
     json_string = """
