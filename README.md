@@ -36,5 +36,5 @@ To see documentation, import each module, and in python interpreter run:
 help(module)
 ```
 
-Each module has a little example function in main, probably used to test
+Each module has a little example function in main, used to test
 it.
