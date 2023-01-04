@@ -28,6 +28,14 @@ whims of each module.
 This scripts are in development staged. They had been tested, but can have errors
 or fail eventually. Take care on it use.
 
+## Setup
+
+To development or testing, all dependencies can be installed using:
+
+```
+pip install -r requirements.txt
+```
+
 ## Documentation
 
 To see documentation, import each module, and in python interpreter run:
