@@ -1,10 +1,7 @@
 import re
 from pprint import pprint
 from notion_client import Client
-from notion_client.helpers import (is_full_page,
-                                    is_full_database,
-                                    iterate_paginated_api,
-                                    collect_paginated_api)
+from notion_client.helpers import is_full_page, is_full_database
 
 class NotionAccess(object):
     """
@@ -88,15 +85,6 @@ class NotionAccess(object):
 
         return page, is_full_page(page)
 
-    def get_content(self, database_id):
-        database_id = self.get_db_id_from_link(database_id)
-
-        all_results = collect_paginated_api(
-            self.notion.databases.query, database_id=database_id
-        )
-
-        return all_results
-
     def get_properties(self, page):
         """
         Returns properties simplified, taking out IDs and other parameter
@@ -105,28 +93,28 @@ class NotionAccess(object):
         new_properties = dict()
 
         properties = page["properties"]
-        for property in properties:
-            new_properties[property] = dict()
+        for prop in properties:
+            new_properties[prop] = dict()
 
-            properties_value = properties[property]
-            property_type = properties_value["type"]
+            properties_value = properties[prop]
+            prop_type = properties_value["type"]
 
-            new_properties[property]["type"] = property_type
-            if property_type == "title":
-                new_properties[property]["value"] = properties_value["title"][0]["plain_text"]
-            elif property_type == "multi_select":
+            new_properties[prop]["type"] = prop_type
+            if prop_type == "title":
+                new_properties[prop]["value"] = properties_value["title"][0]["plain_text"]
+            elif prop_type == "multi_select":
                 multi_selectors = properties_value["multi_select"]
                 multi_select_list = list()
                 for multi_select in multi_selectors:
                     multi_select_list.append(multi_select["name"])
 
-                new_properties[property]["multi_select"] = multi_select_list
-            elif property_type == "number":
-                new_properties[property]["value"] = properties_value["number"]
-            elif property_type == "rich_text":
-                new_properties[property]["value"] = properties_value["rich_text"][0]["plain_text"]
-            elif property_type == "checkbox":
-                new_properties[property]["value"] = properties_value["checkbox"]
+                new_properties[prop]["multi_select"] = multi_select_list
+            elif prop_type == "number":
+                new_properties[prop]["value"] = properties_value["number"]
+            elif prop_type == "rich_text":
+                new_properties[prop]["value"] = properties_value["rich_text"][0]["plain_text"]
+            elif prop_type == "checkbox":
+                new_properties[prop]["value"] = properties_value["checkbox"]
 
         return new_properties
 
@@ -140,10 +128,6 @@ def main():
 
     if is_page:
         properties = notion_object.get_properties(page)
-
-    content = notion_object.get_content(DATABASE_ID)
-
-    pprint(content)
 
 if __name__ == "__main__":
     main()
