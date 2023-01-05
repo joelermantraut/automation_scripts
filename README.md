@@ -16,6 +16,7 @@ It includes:
  - Web scrapping with chrome driver.
  - Multiprocessing and threading management.
  - Advance printing functions.
+ - Notion App access databases and page reading.
 
 ## Usage
 
